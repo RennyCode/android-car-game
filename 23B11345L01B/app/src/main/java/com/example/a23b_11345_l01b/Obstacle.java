@@ -5,9 +5,6 @@ import java.util.Random;
 
 public class Obstacle {
 
-    private static final int OBS_WIDTH = 80;
-    private static final int OBS_HEIGHT = 80;
-    private static final int OBS_VELOCITY = 20;
     private int x_pos;
     private int y_pos;
     private Random random;
@@ -22,26 +19,12 @@ public class Obstacle {
         this.y_pos = 0;
     }
 
-    public int get_obs_width() {
-        return OBS_WIDTH;
-    }
-
-    public int get_obs_height() {
-        return OBS_HEIGHT;
-    }
-
-    public int get_obs_v() {
-        return OBS_VELOCITY;
-    }
-
     public int get_x_pos() {
         return x_pos;
     }
-
     public int get_y_pos() {
         return y_pos;
     }
-
     public void set_x_pos(int x_pos) {
         this.x_pos = x_pos;
     }

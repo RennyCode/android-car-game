@@ -32,11 +32,9 @@ public class GameManager {
     public Obstacle[] getObstacles() {
         return obstacles;
     }
-
     public void setScore(int newScore) {
         this.score = newScore;
     }
-
     public void setLife(int newLife) {
         this.life = newLife;
     }
@@ -45,19 +43,19 @@ public class GameManager {
     }
 
     public Boolean move_car_right() {
-        if (user.x_pos == 2) {
+        if (user.get_x_pos() == 2) {
             return false;
         } else {
-            user.x_pos++;
+            user.set_x_pos(user.get_x_pos() + 1);
             return true;
         }
     }
 
     public Boolean move_car_left() {
-        if (user.x_pos == 0) {
+        if (user.get_x_pos() == 0) {
             return false;
         } else {
-            user.x_pos--;
+            user.set_x_pos(user.get_x_pos() - 1);
             return true;
         }
     }
@@ -67,7 +65,7 @@ public class GameManager {
         this.life = life;
         this.score = 0;
 
-        this.getExplosion().y_pos = 5;
+        this.getExplosion().set_explosion_pos(0,5);
         this.getUser().reset_pos();
 
         for (int i=0; i<obstacles.length; i++){

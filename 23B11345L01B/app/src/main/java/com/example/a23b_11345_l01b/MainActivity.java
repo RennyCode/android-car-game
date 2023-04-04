@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void set_def_pos() {
 
-        main_IMG_car.setX(gameManager.getUser().x_pos * step_size_x + MARG_RIGHT);
-        main_IMG_explosion.setY(gameManager.getExplosion().y_pos * step_size_y);
+        main_IMG_car.setX(gameManager.getUser().get_x_pos() * step_size_x + MARG_RIGHT);
+        main_IMG_explosion.setY(gameManager.getExplosion().get_y_pos() * step_size_y);
 
         for(int i=0; i<NUM_OF_OBSTACLES; i++){
             gameManager.getObstacles()[i].set_y_pos(-3*i);
@@ -107,11 +107,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (button_name.compareTo("Right") == 0) {
             if (gameManager.move_car_right()) {
-                main_IMG_car.setX(gameManager.getUser().x_pos * step_size_x + MARG_RIGHT);
+                main_IMG_car.setX(gameManager.getUser().get_x_pos() * step_size_x + MARG_RIGHT);
             }
         }else {
             if(gameManager.move_car_left()){
-                main_IMG_car.setX(gameManager.getUser().x_pos * step_size_x + MARG_RIGHT);
+                main_IMG_car.setX(gameManager.getUser().get_x_pos() * step_size_x + MARG_RIGHT);
             }
         }
 //       refreshUI();
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 gameManager.reset_game(main_IMG_hearts.length);
                 set_def_pos();
                 gameManager.getExplosion().hide_explosion();
-                main_IMG_explosion.setY(gameManager.getExplosion().y_pos * step_size_y);
+                main_IMG_explosion.setY(gameManager.getExplosion().get_y_pos() * step_size_y);
                 for(int i =0; i<main_IMG_hearts.length; i++)
                     main_IMG_hearts[i].setAlpha(1f);
             }
@@ -157,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void collisionUI(){
-        int cur_car_x = gameManager.getUser().x_pos;
-        int cur_car_y = gameManager.getUser().y_pos;
+        int cur_car_x = gameManager.getUser().get_x_pos();
+        int cur_car_y = gameManager.getUser().get_y_pos();
 
         for(int i=0; i<gameManager.getObstacles().length; i++) {
 
@@ -166,18 +166,18 @@ public class MainActivity extends AppCompatActivity {
                     && cur_car_y - gameManager.getObstacles()[i].get_y_pos() < 5
                     && cur_car_y - gameManager.getObstacles()[i].get_y_pos() > 2) {
 
-                if (gameManager.getUser().got_hit) {
+                if (gameManager.getUser().get_got_hit()) {
                     //ignore collision this time
-                    gameManager.getUser().got_hit = false;
+                    gameManager.getUser().set_got_hit(false);
                     gameManager.getExplosion().hide_explosion();
-                    main_IMG_explosion.setY(gameManager.getExplosion().y_pos * step_size_y);
+                    main_IMG_explosion.setY(gameManager.getExplosion().get_y_pos() * step_size_y);
                 } else {
                     //detect collision
                     System.out.println("got hit is true");
                     gameManager.getExplosion().set_explosion_pos(cur_car_x, cur_car_y);
-                    main_IMG_explosion.setX(gameManager.getExplosion().x_pos * step_size_x + MARG_RIGHT - EXP_MARG_LEFT);
+                    main_IMG_explosion.setX(gameManager.getExplosion().get_x_pos() * step_size_x + MARG_RIGHT - EXP_MARG_LEFT);
                     main_IMG_explosion.setY(main_IMG_car.getY() - EXP_MARG_top);
-                    gameManager.getUser().got_hit = true;
+                    gameManager.getUser().set_got_hit(true);
 
                     gameManager.setLife(gameManager.getLife() - 1);
                     if(gameManager.getLife() != 0)
@@ -186,9 +186,7 @@ public class MainActivity extends AppCompatActivity {
                     Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
 
-                    Toast
-                            .makeText(this, "Bam!",Toast.LENGTH_SHORT)
-                            .show();
+                    Toast.makeText(this, "Bam!",Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -210,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
             scr = "999";
         }
         main_LBL_score.setText(scr);
-
 
     }
 

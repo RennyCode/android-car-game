@@ -2,14 +2,8 @@ package com.example.a23b_11345_l01b;
 
 public class Explosion {
 
-
-    private static final int explosion_WIDTH = 50;
-
-    private static final int explosion_HEIGHT = 50;
-
-    int x_pos;
-
-    int y_pos;
+    private int x_pos;
+    private int y_pos;
 
     public Explosion(){
         super();
@@ -25,5 +19,8 @@ public class Explosion {
         this.x_pos = x;
         this.y_pos = y;
     }
+
+    public int get_x_pos() {return x_pos;}
+    public int get_y_pos() {return y_pos;}
 
 }
