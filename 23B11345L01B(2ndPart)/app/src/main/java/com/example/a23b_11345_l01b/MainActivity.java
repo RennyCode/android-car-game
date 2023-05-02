@@ -1,13 +1,17 @@
 package com.example.a23b_11345_l01b;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -16,19 +20,28 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.os.Debug;
 import android.os.Handler;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_CODE = 100;
     private final int y_DIVIDER = 12;
     private final int LANES = 3;
     private final int MARG_RIGHT = 40;
@@ -53,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     private double lon;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
+
+    private LocationManager locationManager;
 
     private VibManager vibratorManager;
     private Handler handler = new Handler();
@@ -98,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
         set_def_pos();
 
-        handler.postDelayed(runnable,DELAY);
+        handler.postDelayed(runnable, DELAY);
         collision_handler.postDelayed(collision_runnable, DELAY);
         score_handler.postDelayed(score_runnable, ONE_SEC);
 
@@ -114,9 +129,9 @@ public class MainActivity extends AppCompatActivity {
         main_IMG_car.setX(gameManager.getUser().get_x_pos() * step_size_x + MARG_RIGHT);
         main_IMG_explosion.setY(gameManager.getExplosion().get_y_pos() * step_size_y);
 
-        for(int i=0; i<NUM_OF_OBSTACLES; i++){
-            gameManager.getObstacles()[i].set_y_pos(-3*i);
-            gameManager.getObstacles()[i].set_x_pos((i+3)%3);
+        for (int i = 0; i < NUM_OF_OBSTACLES; i++) {
+            gameManager.getObstacles()[i].set_y_pos(-3 * i);
+            gameManager.getObstacles()[i].set_x_pos((i + 3) % 3);
             main_IMG_obstacles[i].setY(gameManager.getObstacles()[i].get_y_pos() * step_size_y);
             main_IMG_obstacles[i].setX(gameManager.getObstacles()[i].get_x_pos() * step_size_x + MARG_RIGHT);
 
@@ -135,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
             if (gameManager.move_car_right()) {
                 main_IMG_car.setX(gameManager.getUser().get_x_pos() * step_size_x + MARG_RIGHT);
             }
-        }else {
-            if(gameManager.move_car_left()){
+        } else {
+            if (gameManager.move_car_left()) {
                 main_IMG_car.setX(gameManager.getUser().get_x_pos() * step_size_x + MARG_RIGHT);
             }
         }
@@ -157,15 +172,14 @@ public class MainActivity extends AppCompatActivity {
                     main_img_heart.setAlpha(1f);
                 //for(int i =0; i<main_IMG_hearts.length; i++)
                 //                    main_IMG_hearts[i].setAlpha(1f);
-            }
-            else
+            } else
                 // end the app
                 openScoreScreen(gameManager.getScore());
         } else {
             // update
 
             //each obs
-            for(int i=0; i<gameManager.getObstacles().length; i++) {
+            for (int i = 0; i < gameManager.getObstacles().length; i++) {
 
                 int i_y_pos = gameManager.getObstacles()[i].get_y_pos();
                 if (i_y_pos > 12) {
@@ -186,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
     private void openScoreScreen(int score) {
 
         getCurrentLocation();
-        System.out.println("from main: " + lat +", " + lon);
+        System.out.println("from main: " + lat + ", " + lon);
         handler.removeCallbacks(score_runnable);
         handler.removeCallbacks(collision_runnable);
         handler.removeCallbacks(runnable);
@@ -199,30 +213,59 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getCurrentLocation() {
-        System.out.println("start get location:");
-        System.out.println(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
+        Log.d("myTag","start get location:");
+        System.out.println(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null){
-                        lat = location.getLatitude();
-                        lon = location.getLongitude();
-                        System.out.println("from main if: " + lat +", " + lon);
-                    }
-                }
+            fusedLocationProviderClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                                try {
+                                    List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                                    lat = location.getLatitude();
+                                    lon = location.getLongitude();
+                                    Log.d( "Tag","from main if: " + lat + ", " + lon);
+                                    System.out.println("from main if: " + lat + ", " + lon);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
 
-            });
+                            }
+                        }
 
+                    }).addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Location request failed
+                        }
+                    });
+        } else {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE);
         }
-        else {
-            System.out.println("from main else:");
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
+
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == REQUEST_CODE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                getCurrentLocation();
+            }
+            else {
+                Toast.makeText(this,"Required Permission", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
     private void collisionUI(){
         int cur_car_x = gameManager.getUser().get_x_pos();
