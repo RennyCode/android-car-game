@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
-
+6
 android {
     namespace 'com.example.a23b_11345_l01b'
     compileSdk 33
