@@ -4,4 +4,5 @@ public interface StepCallback {
 
     void tilted_to_right();
     void tilted_to_left();
+    void tilted_to_center();
 }

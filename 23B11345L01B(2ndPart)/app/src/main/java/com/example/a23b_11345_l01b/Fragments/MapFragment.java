@@ -84,7 +84,7 @@ public class MapFragment extends Fragment{
 
         map_LBL_title.setText(name);
         System.out.println(name);
-        System.out.println(clicked_game.getName() + " : " + clicked_game.getScore());
+        System.out.println(clicked_game.getDate_str() + " : " + clicked_game.getScore());
 
         if (map != null) {
             //latitude, longitude

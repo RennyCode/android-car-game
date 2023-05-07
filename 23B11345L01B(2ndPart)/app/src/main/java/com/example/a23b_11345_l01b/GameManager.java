@@ -8,13 +8,15 @@ public class GameManager {
     private Explosion explosion;
     private UserObject user;
     private Obstacle[] obstacles;
+
+//    private Obstacle[] fuels;
     private int score;
     private int life;
 
-    public GameManager(int life, int num_of_obstacles) {
+    public GameManager(int life, int num_of_obstacles, int num_of_fuels) {
         this.explosion = new Explosion();
         this.user = new UserObject();
-        this.obstacles = new Obstacle[num_of_obstacles];
+        this.obstacles = new Obstacle[num_of_obstacles + num_of_fuels];
         for(int i=0; i <obstacles.length; i++){
             obstacles[i] = new Obstacle();
         }
@@ -32,6 +34,10 @@ public class GameManager {
     public Obstacle[] getObstacles() {
         return obstacles;
     }
+
+//    public Obstacle[] getFuels() {
+//        return fuels;
+//    }
     public void setScore(int newScore) {
         this.score = newScore;
     }
@@ -43,7 +49,7 @@ public class GameManager {
     }
 
     public Boolean move_car_right() {
-        if (user.get_x_pos() == 2) {
+        if (user.get_x_pos() == 4) {
             return false;
         } else {
             user.set_x_pos(user.get_x_pos() + 1);

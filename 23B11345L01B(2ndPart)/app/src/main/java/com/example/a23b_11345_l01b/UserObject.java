@@ -12,7 +12,7 @@ public class UserObject {
         reset_pos();
     }
     public void reset_pos(){
-        this.x_pos = 1;
+        this.x_pos = 2;
         this.y_pos = 12;
         this.got_hit = false;
     }

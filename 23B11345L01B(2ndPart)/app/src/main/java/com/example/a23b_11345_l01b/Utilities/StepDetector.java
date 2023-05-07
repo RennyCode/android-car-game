@@ -5,12 +5,17 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.example.a23b_11345_l01b.Interfaces.StepCallback;
 
+import java.util.logging.LogRecord;
+
 
 public class StepDetector {
-    private double tiltAngle;
+
+    private float tiltAngle;
     private Sensor sensor;
     private SensorManager sensorManager;
     private StepCallback stepCallback;
@@ -33,17 +38,28 @@ public class StepDetector {
             @Override
             public void onSensorChanged(SensorEvent event) {
                 float x = event.values[0];
-                float y = event.values[1];
-                float z = event.values[2];
+//                float y = event.values[1];
+//                float z = event.values[2];
 
-                tiltAngle = Math.atan2(x, Math.sqrt(y*y + z*z)) * 180/Math.PI;
-                if (tiltAngle> 30) {
+
+
+//                tiltAngle = Math.atan2(x, Math.sqrt(y*y + z*z)) * 180/Math.PI;
+                tiltAngle = x;
+
+                System.out.println("tiltAngle = "+ tiltAngle);
+                if (tiltAngle < -4) {
                     //to right
+                    System.out.println("x above 30");
                     stepCallback.tilted_to_right();
-                } else if (tiltAngle < -30) {
+                } else if (tiltAngle > 4) {
                     //to left
+                    System.out.println("x below 30");
+
                     stepCallback.tilted_to_left();
+                } else {
+                    stepCallback.tilted_to_center();
                 }
+
             }
 
             @Override
@@ -62,6 +78,7 @@ public class StepDetector {
     public int getStepsX() {
         return this.stepCounterX;
     }
+
     public double getTiltAngle() {
         return this.tiltAngle;
     }
