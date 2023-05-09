@@ -1,24 +1,23 @@
 package com.example.a23b_11345_l01b;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.widget.CompoundButton;
 import android.widget.Toast;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+import android.Manifest;
+import android.content.Intent;
 import android.widget.ToggleButton;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,15 +26,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -43,7 +35,6 @@ public class MenuActivity extends AppCompatActivity {
     private double lat;
     private double lon;
     private FusedLocationProviderClient fusedLocationProviderClient;
-
     private AppCompatImageView main_IMG_background;
     private MaterialButton[] menu_BTN_options;
     private ToggleButton menu_TOGGLE;
@@ -61,7 +52,6 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getCurrentLocation();
-
         isToggled = 0;
         game_speed = 0; // game def normal
         findViews();
@@ -69,13 +59,10 @@ public class MenuActivity extends AppCompatActivity {
                 .placeholder(R.drawable.ic_launcher_background).into(main_IMG_background);
         setAnswersClickListeners();
     }
-
-
     private void setAnswersClickListeners() {
         for (MaterialButton mb : menu_BTN_options) {
             mb.setOnClickListener(v -> clicked(mb.getText().toString()));
         }
-
         menu_TOGGLE.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 buttonView.setBackground(getDrawable(R.color.blue_200));
@@ -98,9 +85,7 @@ public class MenuActivity extends AppCompatActivity {
         });
 
     }
-
     private void clicked(String button_name){
-
             if (button_name.compareTo("Play") == 0) {
                 // start game , pass flag for btn or movement
                 Intent secondActivityIntent = new Intent(this, MainActivity.class);
@@ -108,7 +93,7 @@ public class MenuActivity extends AppCompatActivity {
                 secondActivityIntent.putExtra(MainActivity.KEY_SPEED, game_speed);
                 secondActivityIntent.putExtra(MainActivity.KEY_LAT, lat);
                 secondActivityIntent.putExtra(MainActivity.KEY_LON, lon);
-                System.out.println("just send to main: lat = " + lat + ", lon = " + lon);
+                System.out.println("From menu to main lat = " + lat + ", lon = " + lon);
                 startActivity(secondActivityIntent);
                 finish();
             } else{
@@ -126,9 +111,6 @@ public class MenuActivity extends AppCompatActivity {
         menu_TOGGLE = findViewById(R.id.toggleButton);
         menu_SPEED = findViewById(R.id.speed_toggle);
     }
-
-
-
     public void getCurrentLocation() {
         System.out.println("start get location:");
         System.out.println(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
@@ -159,9 +141,7 @@ public class MenuActivity extends AppCompatActivity {
                         lon = 0;
                     }
                 }
-
             });
-
         }
         else {
             ActivityCompat.requestPermissions(MenuActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
@@ -181,11 +161,7 @@ public class MenuActivity extends AppCompatActivity {
                 Toast.makeText(this,"Request Permission", Toast.LENGTH_SHORT).show();
                 System.out.println("Still no permission...");
             }
-
         }
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
-
 }

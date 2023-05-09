@@ -1,9 +1,6 @@
-package com.example.a23b_11345_l01b;
-
-import java.util.Random;
+package com.example.a23b_11345_l01b.ObjectClasses;
 
 public class UserObject {
-
     private int x_pos;
     private int y_pos;
     private boolean got_hit;
@@ -16,7 +13,6 @@ public class UserObject {
         this.y_pos = 12;
         this.got_hit = false;
     }
-
     public int get_x_pos() {
         return x_pos;
     }
@@ -34,7 +30,6 @@ public class UserObject {
         this.y_pos = y_pos;
     }
     public void set_got_hit(boolean got_hit) { this.got_hit = got_hit; }
-
 }
 
 

@@ -98,7 +98,23 @@
         android:layout_height="70dp"
         android:layout_weight="1"
         android:rotation="180"
+        android:src="@drawable/obj2" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/main_IMG_obstacle6"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_weight="1"
+        android:rotation="180"
         android:src="@drawable/obj3" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/main_IMG_obstacle7"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_weight="1"
+        android:rotation="180"
+        android:src="@drawable/obj2" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/main_IMG_fuel_1"
@@ -114,13 +130,6 @@
         android:layout_weight="1"
         android:src="@drawable/fuel_tank" />
 
-<!--    <com.google.android.material.imageview.ShapeableImageView-->
-<!--        android:id="@+id/main_IMG_fuel_3"-->
-<!--        android:layout_width="30dp"-->
-<!--        android:layout_height="40dp"-->
-<!--        android:layout_weight="1"-->
-<!--        android:src="@drawable/fuel_tank" />-->
-
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/main_IMG_car"
@@ -133,12 +142,12 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/main_IMG_explosion"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="105dp"
+        android:layout_height="105dp"
         android:layout_weight="1"
         android:src="@drawable/explosion"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dp"/>
+        android:layout_marginBottom="1000dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"

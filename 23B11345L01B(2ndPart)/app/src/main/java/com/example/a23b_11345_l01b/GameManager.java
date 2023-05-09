@@ -1,15 +1,13 @@
 package com.example.a23b_11345_l01b;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.a23b_11345_l01b.ObjectClasses.Explosion;
+import com.example.a23b_11345_l01b.ObjectClasses.Obstacle;
+import com.example.a23b_11345_l01b.ObjectClasses.UserObject;
 
 public class GameManager {
-
     private Explosion explosion;
     private UserObject user;
     private Obstacle[] obstacles;
-
-//    private Obstacle[] fuels;
     private int score;
     private int life;
 
@@ -34,10 +32,6 @@ public class GameManager {
     public Obstacle[] getObstacles() {
         return obstacles;
     }
-
-//    public Obstacle[] getFuels() {
-//        return fuels;
-//    }
     public void setScore(int newScore) {
         this.score = newScore;
     }
@@ -47,7 +41,6 @@ public class GameManager {
     public boolean isLose() {
         return life == 0;
     }
-
     public Boolean move_car_right() {
         if (user.get_x_pos() == 4) {
             return false;
@@ -56,7 +49,6 @@ public class GameManager {
             return true;
         }
     }
-
     public Boolean move_car_left() {
         if (user.get_x_pos() == 0) {
             return false;
@@ -65,18 +57,13 @@ public class GameManager {
             return true;
         }
     }
-
-
     public void reset_game(int life){
         this.life = life;
         this.score = 0;
-
         this.getExplosion().set_explosion_pos(0,5);
         this.getUser().reset_pos();
-
         for (int i=0; i<obstacles.length; i++){
             obstacles[i].reset_pos();
         }
     }
-
 }
