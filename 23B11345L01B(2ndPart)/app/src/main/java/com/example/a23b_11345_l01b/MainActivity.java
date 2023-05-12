@@ -102,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
+        getCurrentLocation();
+        System.out.println("from main: " + lat + ", " + lon);
 
         vibratorManager = VibManager.getInstance(this);
         findViews();
@@ -199,11 +200,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void openScoreScreen(int score) {
 
-        getCurrentLocation();
-        System.out.println("from main: " + lat + ", " + lon);
+
         handler.removeCallbacks(score_runnable);
         handler.removeCallbacks(collision_runnable);
         handler.removeCallbacks(runnable);
+
+
         Intent secondActivityIntent = new Intent(this, endgameActivity.class);
         secondActivityIntent.putExtra(endgameActivity.KEY_SCORE, score);
         secondActivityIntent.putExtra(endgameActivity.KEY_LAT, lat);

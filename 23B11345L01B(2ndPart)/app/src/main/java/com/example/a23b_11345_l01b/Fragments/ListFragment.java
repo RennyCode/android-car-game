@@ -100,7 +100,8 @@ public class ListFragment extends Fragment{
 
             }
         });
-
+//        l_view.performClick();
+//
         return view;
     }
 
